@@ -1,0 +1,54 @@
+name: Ingest market data
+
+on:
+  schedule:
+    # 21:30 UTC daily = 16:30 CT, ~90 min after the 15:00 CT RTH close.
+    # Actions cron can drift by 10–30 min under load; the 7-day fetch window
+    # absorbs that, and a daily run gives 7x redundancy against a missed day.
+    - cron: "30 21 * * *"
+  workflow_dispatch:              # manual run — use this for the first smoke test
+    inputs:
+      symbols:
+        description: "Space-separated symbols (blank = all)"
+        required: false
+        default: ""
+
+concurrency:
+  group: ingest
+  cancel-in-progress: false       # never abandon a partial write
+
+permissions:
+  contents: write                 # the job commits the data back
+
+jobs:
+  ingest:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Fetch and append
+        run: python ingest.py --symbols ${{ github.event.inputs.symbols }}
+
+      - name: Commit
+        run: |
+          git config user.name  "futurespulse-bot"
+          git config user.email "actions@github.com"
+          git add data/
+          if git diff --staged --quiet; then
+            echo "No new bars — nothing to commit."
+            exit 0
+          fi
+          git commit -m "data: ingest $(date -u +%Y-%m-%d)"
+          # Another run may have landed while this one was fetching.
+          git pull --rebase --autostash origin ${{ github.ref_name }}
+          git push

@@ -1,0 +1,58 @@
+{
+  "project": "FuturesPulse",
+  "description": "Wyckoff Day Trading Timing Model for futures. Rebuild of a Replit/Streamlit app as a static browser app on GitHub Pages, with GitHub Actions doing the Yahoo Finance ingestion. Data source is Yahoo (yfinance) seeded from a 15-month 1-minute ES export. The repo is the datastore AND the source of truth.",
+  "repository": {
+    "owner": "rassulshah",
+    "name": "futurespulse",
+    "url": "https://github.com/rassulshah/futurespulse",
+    "mainBranch": "main",
+    "rawUrlBase": "https://raw.githubusercontent.com/rassulshah/futurespulse/main",
+    "pagesUrl": "https://rassulshah.github.io/futurespulse/"
+  },
+  "loadInstruction": "Clone the repo, then read canonicalFiles.projectFiles IN ORDER. Read session-state/latest-resume-note.md FIRST — it is the single source of 'where we are'. Then session-state/DECISIONS.md (why things are the way they are, including the finding that killed the original directional premise). Then master-spec.md. Then engine/zigzag.js IN FULL. Report the 6 points in reportOnLoad, then WAIT for direction. Do not start building on load.",
+  "canonicalFiles": {
+    "projectFiles": [
+      "session-state/latest-resume-note.md",
+      "session-state/DECISIONS.md",
+      "session-state/PROJECT-CONSTANTS.md",
+      "master-spec.md",
+      "changelog/CHANGELOG.md",
+      "engine/zigzag.js",
+      "pipeline/ingest.py",
+      ".github/workflows/ingest.yml"
+    ],
+    "notYetBuilt": [
+      "current/index.html"
+    ]
+  },
+  "reportOnLoad": [
+    "files loaded",
+    "engine understanding (ZigZag rule, wave table, BW/BV, extension) and its verification status",
+    "pipeline understanding (Yahoo constraints, cadence, store format) and whether the Action has ever run green",
+    "data coverage (symbols, months, session count, known gaps)",
+    "build state — which sections are specified / built / verified",
+    "next concrete step"
+  ],
+  "dataStore": {
+    "path": "data/{SYMBOL}/{YYYY-MM}.json",
+    "manifest": "data/{SYMBOL}/index.json",
+    "format": "columnar {t,o,h,l,c,v}; t is epoch milliseconds UTC",
+    "interval": "3m",
+    "sessionTz": "America/Chicago",
+    "rth": "08:30-15:00 CT",
+    "note": "Bars are 3-minute, resampled from Yahoo 1m. Yahoo has NO 3m interval and serves 1m for only ~7 days, so the Action must run at least weekly. A gap longer than 7 days is PERMANENT."
+  },
+  "verification": {
+    "referenceSession": "ES 2026-08-21",
+    "zigzagPivots": "24/24 reproduced exactly against the original Streamlit app",
+    "dmdWave": "22.50 pts, 09:42 -> 10:06",
+    "extension": "1.633 (app chart shows 1.63)",
+    "targetWave": "24.50 pts / 27 min (Session Details: 24.50 / 27m)"
+  },
+  "environment": {
+    "userMachine": "Windows",
+    "suggestedRepoPath": "C:\\Dev\\futurespulse",
+    "cloudSandbox": "CAN git clone from github.com (verified 2026-08-23). CANNOT push — no credentials. Delivery to the repo goes through the user.",
+    "googleDrive": "NOT USED. Unlike the gex project there is no Drive mirror. Do not create one; the repo is the only store."
+  }
+}
