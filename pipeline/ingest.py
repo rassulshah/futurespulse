@@ -208,6 +208,8 @@ def main() -> int:
     ap.add_argument("--seed", nargs=2, metavar=("SYMBOL", "CSV"))
     ap.add_argument("--dry-run", action="store_true")
     args = ap.parse_args()
+    if not args.symbols:
+      ar.symbols=list(SYMBOLS)
 
     if args.seed:
         seed(args.seed[0], args.seed[1], args.dry_run)
