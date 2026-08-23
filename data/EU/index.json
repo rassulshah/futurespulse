@@ -1,0 +1,12 @@
+{
+  "symbol": "EU",
+  "ticker": "6E=F",
+  "interval": "3m",
+  "tz": "America/Chicago",
+  "pointValue": 125000,
+  "tickSize": 5e-05,
+  "months": [
+    "2026-08"
+  ],
+  "updated": "2026-08-23T21:49:10+00:00"
+}

@@ -1,0 +1,12 @@
+{
+  "symbol": "BTC",
+  "ticker": "BTC=F",
+  "interval": "3m",
+  "tz": "America/Chicago",
+  "pointValue": 5,
+  "tickSize": 5,
+  "months": [
+    "2026-08"
+  ],
+  "updated": "2026-08-23T21:49:10+00:00"
+}

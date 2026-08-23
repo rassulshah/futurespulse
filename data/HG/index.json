@@ -1,0 +1,12 @@
+{
+  "symbol": "HG",
+  "ticker": "HG=F",
+  "interval": "3m",
+  "tz": "America/Chicago",
+  "pointValue": 25000,
+  "tickSize": 0.0005,
+  "months": [
+    "2026-08"
+  ],
+  "updated": "2026-08-23T21:49:09+00:00"
+}

@@ -1,0 +1,12 @@
+{
+  "symbol": "CL",
+  "ticker": "CL=F",
+  "interval": "3m",
+  "tz": "America/Chicago",
+  "pointValue": 1000,
+  "tickSize": 0.01,
+  "months": [
+    "2026-08"
+  ],
+  "updated": "2026-08-23T21:49:09+00:00"
+}

@@ -1,0 +1,12 @@
+{
+  "symbol": "NG",
+  "ticker": "NG=F",
+  "interval": "3m",
+  "tz": "America/Chicago",
+  "pointValue": 10000,
+  "tickSize": 0.001,
+  "months": [
+    "2026-08"
+  ],
+  "updated": "2026-08-23T21:49:10+00:00"
+}
