@@ -34,10 +34,10 @@ jobs:
           cache: pip
 
       - name: Install dependencies
-        run: pip install -r requirements.txt
+        run: pip install -r pipeline/requirements.txt
 
       - name: Fetch and append
-        run: python ingest.py --symbols ${{ github.event.inputs.symbols }}
+        run: python pipeline/ingest.py --symbols ${{ github.event.inputs.symbols }}
 
       - name: Commit
         run: |
