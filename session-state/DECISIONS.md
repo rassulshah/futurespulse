@@ -157,3 +157,55 @@ rank waves differently. Measured on ES 2026-07-16, the same wave scores **bv 7**
 **bv 8** on peak-bar. Picking one silently would have been wrong half the time.
 
 **Still open** — see OPEN THREADS item 2 in the resume note.
+
+---
+
+## D-011 · Bars are labelled by their CLOSING edge
+
+**Decided:** `resample(..., label="right", closed="left")`. A 3m bar covering 08:30–08:33 is
+called **08:33**.
+
+**Evidence:** the first build used `label="left"` and reproduced only **1 of 130** bars against the
+original app. Shifting the store by one bar gave **130/130**, and re-labelling every timestamp by
++3 minutes gave **131/131** — the data was always identical, only the names were wrong.
+
+Left-labelling shifted every reported time three minutes early (`08:33 / 08:45 / 08:54` where the
+app says `08:36 / 08:48 / 08:57`) and, because green/red is close-vs-open, changed which bar
+supplied the session open.
+
+**Conversion is pure arithmetic:** a left label at `t` and a right label at `t+3min` describe the
+same bin, so the existing 156,236 bars were fixed by adding 3 minutes. No refetch, nothing
+recomputed.
+
+⚠ **Consequence for all session logic:** bucket on the bar's START instant (`t − 3min`), never on
+its label. Otherwise the 15:00 bar falls outside RTH and 08:33 is treated as the open.
+
+---
+
+## D-012 · ⚠ OPEN — the original app's session open is one bar early
+
+**Not decided.** Recorded because it changes a day's colour.
+
+With bars correctly right-labelled, the RTH session is **08:33 → 15:00** (130 bars), and its open
+is the open of the 08:33 bar — the price at **08:30**, the actual RTH open.
+
+The original app instead plots **131** bars, 08:30 → 15:00, so its first bar covers **08:27–08:30**
+— one bar BEFORE the open — and it takes the session open from there.
+
+On ES 2026-08-21:
+
+| | Open | Close | Colour |
+|---|---|---|---|
+| original app | 7687.00 (08:27 price) | 7691.50 | **GREEN** |
+| this rebuild | 7695.75 (08:30 price) | 7691.50 | **RED** |
+
+Everything else agrees exactly — H 7714, L 7676.75, range 37.25, all 24 pivots, the 22.50 pt Dmd
+wave, its 1.633 extension, the 24.50 pt / 27 min target wave.
+
+The rebuild currently uses the **market-correct 08:30 open**, on the grounds that the original
+app has a demonstrated off-by-one elsewhere (defect D1) and 08:27 is pre-open. But the original's
+own figures reconcile against 7687 — `Wick Amt = Open − LOD = 10.25`, `Wick% = 28%` — so the
+choice may be deliberate rather than a bug.
+
+**This needs the user's answer before Sections 4 and 5 are built on it.** It decides the open, and
+the open decides green/red.

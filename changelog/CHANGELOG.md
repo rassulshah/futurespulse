@@ -1,5 +1,28 @@
 # CHANGELOG
 
+## 2026-08-23 (later) — Section 3 shipped; bar labels were off by one
+
+**The bars were right, the labels were wrong.** `to_3m` used `label="left"`, naming each 3m bar for
+the minute it OPENS. The original app names it for the minute it CLOSES. First comparison matched
+**1 of 130** bars; shifting one bar gave 130/130; re-labelling +3 minutes gave **131/131**.
+
+Every reported time was three minutes early, and because green/red is close-vs-open, the session
+open came from the wrong bar. Fixed in the pipeline (`label="right"`) and applied to all 156,236
+stored bars by arithmetic — no refetch. Session bucketing now keys on each bar's START instant.
+
+After the fix the engine reproduces the original exactly on ES 2026-08-21: all 24 pivots, the
+22.50 pt Dmd wave, its **1.633** extension, the 24.50 pt / 27 min target wave.
+
+**Section 3 is built** — `current/index.html`, no dependencies, reads the store from the same
+origin. Direction as a point estimate with its 95% interval against the baseline (a proportion
+near 50% is not a magnitude-from-zero quantity, so bars would misencode it); range as p10/p25/
+median/p75/p90 rather than a mean. The JS statistics were cross-checked against an independent
+Python implementation and agree to the digit.
+
+⚠ **New open question — DECISIONS D-012.** The original app's session open comes from a bar
+covering 08:27–08:30, one bar before the RTH open. The rebuild uses the 08:30 open. On
+2026-08-21 that is GREEN vs RED. Blocking for Sections 4/5.
+
 ## 2026-08-23 — scaffold, verified wave engine, ES data loaded — NO UI YET
 
 **The ZigZag is solved.** "3 bar high/low reversal" turned out to mean **3 bars on each side**, a

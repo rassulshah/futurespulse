@@ -26,8 +26,8 @@ Section 3 survives while the direction half does not.
 | `pipeline/ingest.py` | built | resample half proven; **Yahoo fetch NEVER RUN** |
 | `.github/workflows/ingest.yml` | built | **never executed** |
 | `data/ES/` | 153,959 3m bars, 17 months | round-trips correctly |
-| `current/index.html` (the app) | **NOT BUILT** | — |
-| Section 3 UI | not built | — |
+| `current/index.html` (the app) | **built** | Section 3 + engine proof; JS stats match Python to the digit |
+| Section 3 UI | **built** | direction w/ n+CI+edge, range percentiles, session chart + wave table |
 | Sections 4 / 5 | **blocked** — see OPEN THREADS | — |
 
 ## LOCKED DECISIONS (user-confirmed)
@@ -92,7 +92,8 @@ Other symbols (NQ GC HG CL NG EU BTC) are configured in `pipeline/ingest.py` but
    basis for free but can never give the **RTH Session** basis, which needs intraday data.
    **Not started.**
 4. **ZigZag settings for other symbols.** K=3 is verified on ES only.
-5. **Section 5 blockers** — still need, from the original `app.py`: the Dmd/Sply signal detection
+5. **Session open, D-012.** 08:30 vs 08:27 — flips 2026-08-21 from RED to GREEN. **Blocking for §4/§5.**
+6. **Section 5 blockers** — still need, from the original `app.py`: the Dmd/Sply signal detection
    rules, the `E:` averaging lookback (same weekday or all sessions? fixed N?), the meaning of the
    integer in `Rly 5` / `Dmd 6`, and red-day behaviour for PT Range and the wick/body split.
 
@@ -120,6 +121,6 @@ Other symbols (NQ GC HG CL NG EU BTC) are configured in `pipeline/ingest.py` but
 
 ## NEXT CONCRETE STEP
 
-Build `current/index.html` — Section 3 on the verified engine: direction with n / CI / baseline
-edge, range with percentile bands, and the intraday chart with the ZigZag overlay as the engine's
-visual proof.
+Answer **DECISIONS D-012** — does the session open come from 08:30 (market-correct, what the
+rebuild does now) or 08:27 (what the original app does)? It decides green/red. Then enable GitHub
+Pages, and start Sections 4/5 once the `app.py` blockers are pulled.
