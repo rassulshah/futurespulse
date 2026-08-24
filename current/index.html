@@ -6,211 +6,173 @@
 <title>FuturesPulse</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
 <style>
+/* Instrument panel, not a document. Near-black ground, dense rows, no serif
+   anywhere, everything for one symbol visible without scrolling on a laptop. */
 :root{
-  --bg:#F2F3F5; --surface:#FFFFFF; --surface-2:#EAECEF;
-  --ink:#15181C; --ink-2:#3A424C; --muted:#666E78;
-  --rule:#D8DCE2; --rule-soft:#E6E9ED;
-  --accent:#B25E00; --accent-soft:#F3E4D0;
-  --bull:#00805C; --bear:#C2352B;          /* validated: CVD ΔE 8.3 vs #FCFCFB */
-  --bull-soft:#DDEEE7; --bear-soft:#F5E0DD;
-  --grid:#E6E9ED;
-  --shadow:0 1px 2px rgba(21,24,28,.05),0 8px 24px -16px rgba(21,24,28,.22);
-}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
-  --bg:#14171B; --surface:#1B1F25; --surface-2:#232830;
-  --ink:#E4E7EA; --ink-2:#C2C8CF; --muted:#98A1AC;
-  --rule:#2C323A; --rule-soft:#242A31;
-  --accent:#E2913A; --accent-soft:#3A2C1A;
-  --bull:#00A87C; --bear:#E24A3B;          /* validated: CVD ΔE 8.5 vs #1a1a19 */
-  --bull-soft:#12291F; --bear-soft:#331E1A;
-  --grid:#262C34;
-  --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 24px -16px rgba(0,0,0,.7);
-}}
-:root[data-theme="dark"]{
-  --bg:#14171B; --surface:#1B1F25; --surface-2:#232830;
-  --ink:#E4E7EA; --ink-2:#C2C8CF; --muted:#98A1AC;
-  --rule:#2C323A; --rule-soft:#242A31;
-  --accent:#E2913A; --accent-soft:#3A2C1A;
-  --bull:#00A87C; --bear:#E24A3B;
-  --bull-soft:#12291F; --bear-soft:#331E1A;
-  --grid:#262C34;
-  --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 24px -16px rgba(0,0,0,.7);
+  --bg:#0C1014; --panel:#131A21; --panel-2:#1A222B; --rule:#232C36; --rule-2:#2E3945;
+  --ink:#DCE4EC; --ink-2:#A9B5C2; --muted:#75828F;
+  --accent:#E2913A; --accent-dim:#3A2C18;
+  --bull:#00A87C; --bear:#E24A3B;             /* validated on #0C1014: CVD ΔE 8.5 */
+  --bull-dim:#0C2A22; --bear-dim:#2E1815;
+  --grid:#1B242D;
 }
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--ink);
-  font-family:"Source Serif 4",Georgia,serif;font-size:16px;line-height:1.6;
-  -webkit-font-smoothing:antialiased}
-.wrap{max-width:1180px;margin:0 auto;padding:0 24px 96px}
+html,body{margin:0;background:var(--bg);color:var(--ink)}
+body{font:400 13px/1.45 "IBM Plex Sans",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+.m{font-family:"IBM Plex Mono",ui-monospace,monospace;font-variant-numeric:tabular-nums}
+.wrap{max-width:1560px;margin:0 auto;padding:0 16px 40px}
 
-/* header */
-header{border-bottom:1px solid var(--rule);padding:36px 0 20px;margin-bottom:4px}
-.eyebrow{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.16em;
-  text-transform:uppercase;color:var(--accent);font-weight:600;margin:0 0 10px}
-h1{font-family:Archivo,sans-serif;font-weight:700;font-size:clamp(28px,4vw,40px);
-  line-height:1.05;letter-spacing:-.02em;margin:0 0 14px}
-#status{font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--muted);
-  display:flex;flex-wrap:wrap;gap:4px 26px}
-#status b{color:var(--ink);font-weight:500}
-.warn{color:var(--accent);font-weight:500}
+/* ── top bar ───────────────────────────────────────────────────────────── */
+.topbar{display:flex;align-items:baseline;gap:18px;flex-wrap:wrap;
+  padding:12px 0 9px;border-bottom:1px solid var(--rule)}
+.brand{font:700 17px/1 "IBM Plex Sans",sans-serif;letter-spacing:-.02em}
+.brand span{color:var(--accent);font-weight:600}
+#status{display:flex;gap:16px;flex-wrap:wrap;font-family:"IBM Plex Mono",monospace;
+  font-size:11px;color:var(--muted);font-variant-numeric:tabular-nums}
+#status b{color:var(--ink-2);font-weight:500}
+#status .warn{color:var(--accent)}
 
-/* controls */
-.controls{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:22px 0 6px}
-button,select{font-family:"IBM Plex Mono",monospace;font-size:12px;
-  background:var(--surface);color:var(--ink);border:1px solid var(--rule);
-  border-radius:5px;padding:7px 13px;cursor:pointer}
-button:hover,select:hover{border-color:var(--accent)}
-button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
-button:focus-visible,select:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
-.seg{display:inline-flex;border:1px solid var(--rule);border-radius:5px;overflow:hidden}
-.seg button{border:0;border-radius:0}
-.seg button+button{border-left:1px solid var(--rule)}
+/* ── controls ──────────────────────────────────────────────────────────── */
+.ctl{display:flex;gap:7px;align-items:center;flex-wrap:wrap;padding:9px 0}
+select,.btn{font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--ink-2);
+  background:var(--panel);border:1px solid var(--rule-2);border-radius:3px;
+  padding:4px 9px;cursor:pointer;line-height:1.5}
+select:hover,.btn:hover{border-color:var(--accent);color:var(--ink)}
+.btn[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#12161a;font-weight:600}
+select:focus-visible,.btn:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.seg{display:inline-flex;border:1px solid var(--rule-2);border-radius:3px;overflow:hidden}
+.seg .btn{border:0;border-radius:0}
+.seg .btn+.btn{border-left:1px solid var(--rule-2)}
+.spacer{flex:1}
 
-/* sections */
-section{padding-top:38px}
-h2{font-family:Archivo,sans-serif;font-weight:700;font-size:24px;letter-spacing:-.015em;
-  margin:0 0 4px}
-h2 .num{font-family:"IBM Plex Mono",monospace;font-size:13px;color:var(--accent);
-  margin-right:10px;vertical-align:2px}
-.lede{color:var(--muted);font-size:15px;margin:0 0 22px;max-width:66ch}
-p{max-width:68ch}
+/* ── panels ────────────────────────────────────────────────────────────── */
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:12px;align-items:start}
+@media (max-width:1080px){.cols{grid-template-columns:1fr}}
+.panel{background:var(--panel);border:1px solid var(--rule);border-radius:4px;overflow:hidden}
+.phead{display:flex;align-items:baseline;gap:10px;padding:7px 11px;background:var(--panel-2);
+  border-bottom:1px solid var(--rule)}
+.phead h2{margin:0;font:600 12px/1 "IBM Plex Sans",sans-serif;letter-spacing:.01em}
+.phead .n{font-family:"IBM Plex Mono",monospace;font-size:10px;color:var(--accent);font-weight:600}
+.phead .sub{font-family:"IBM Plex Mono",monospace;font-size:10px;color:var(--muted);margin-left:auto}
+.pbody{padding:9px 11px 11px}
 
-/* headline tiles */
-.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px;margin:0 0 26px}
-.tile{background:var(--surface);border:1px solid var(--rule);border-radius:8px;
-  padding:16px 18px;box-shadow:var(--shadow)}
-.tile dt{font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.1em;
-  text-transform:uppercase;color:var(--muted);font-weight:600;margin:0 0 7px}
-.tile .big{font-family:Archivo,sans-serif;font-size:30px;font-weight:700;line-height:1.05;
-  letter-spacing:-.02em;font-variant-numeric:tabular-nums}
-.tile .sub{font-family:"IBM Plex Mono",monospace;font-size:11.5px;color:var(--muted);
-  margin-top:6px;font-variant-numeric:tabular-nums}
-.verdict{display:inline-block;font-family:"IBM Plex Mono",monospace;font-size:10.5px;
-  font-weight:600;letter-spacing:.09em;text-transform:uppercase;padding:3px 8px;
-  border-radius:3px;border:1px solid;margin-top:9px}
-.v-none{background:var(--surface-2);color:var(--muted);border-color:var(--rule)}
-.v-bull{background:var(--bull-soft);color:var(--bull);border-color:var(--bull)}
-.v-bear{background:var(--bear-soft);color:var(--bear);border-color:var(--bear)}
+/* ── readout strip ─────────────────────────────────────────────────────── */
+.readout{display:flex;gap:0;border:1px solid var(--rule);border-radius:3px;overflow:hidden;
+  margin-bottom:9px}
+.readout > div{flex:1;padding:6px 10px;background:var(--panel-2);min-width:0}
+.readout > div + div{border-left:1px solid var(--rule)}
+.readout dt{font-family:"IBM Plex Mono",monospace;font-size:9.5px;letter-spacing:.07em;
+  text-transform:uppercase;color:var(--muted);margin:0 0 3px;white-space:nowrap;
+  overflow:hidden;text-overflow:ellipsis}
+.readout .v{font:600 20px/1.05 "IBM Plex Mono",monospace;font-variant-numeric:tabular-nums;
+  letter-spacing:-.02em}
+.readout .v.sm{font-size:14px}
+.readout .s{font-family:"IBM Plex Mono",monospace;font-size:10px;color:var(--muted);margin-top:3px;
+  font-variant-numeric:tabular-nums}
+.up{color:var(--bull)} .dn{color:var(--bear)} .am{color:var(--accent)}
+.tag{display:inline-block;font-family:"IBM Plex Mono",monospace;font-size:9px;font-weight:600;
+  letter-spacing:.08em;text-transform:uppercase;padding:2px 5px;border-radius:2px;
+  border:1px solid;margin-top:4px}
+.t-none{background:transparent;color:var(--muted);border-color:var(--rule-2)}
+.t-up{background:var(--bull-dim);color:var(--bull);border-color:var(--bull)}
+.t-dn{background:var(--bear-dim);color:var(--bear);border-color:var(--bear)}
 
-/* cards + charts */
-.card{background:var(--surface);border:1px solid var(--rule);border-radius:8px;
-  padding:18px 20px 12px;box-shadow:var(--shadow);margin:0 0 22px}
-.card h3{font-family:Archivo,sans-serif;font-size:15px;font-weight:600;margin:0 0 2px}
-.card .cap{font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--muted);margin:0 0 14px}
-.chartbox{overflow-x:auto}
 svg{display:block;max-width:100%}
 svg text{font-family:"IBM Plex Mono",monospace;font-variant-numeric:tabular-nums}
-.legend{display:flex;flex-wrap:wrap;gap:16px;font-family:"IBM Plex Mono",monospace;
-  font-size:11px;color:var(--muted);margin:10px 0 4px;align-items:center}
-.legend i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:6px;
-  vertical-align:-1px}
+.scroll{overflow-x:auto}
 
-/* tables */
-.tbl-wrap{overflow-x:auto;border:1px solid var(--rule);border-radius:8px;
-  background:var(--surface);box-shadow:var(--shadow);margin:0 0 22px}
-table{border-collapse:collapse;width:100%;font-size:13.5px}
-th,td{text-align:left;padding:8px 13px;border-bottom:1px solid var(--rule-soft)}
-thead th{font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.1em;
-  text-transform:uppercase;color:var(--muted);background:var(--surface-2);
-  border-bottom:1px solid var(--rule);white-space:nowrap}
+/* ── tables ────────────────────────────────────────────────────────────── */
+table{border-collapse:collapse;width:100%;font-family:"IBM Plex Mono",monospace;font-size:11px;
+  font-variant-numeric:tabular-nums}
+th,td{padding:3px 8px;text-align:right;white-space:nowrap;border-bottom:1px solid var(--rule)}
+th:first-child,td:first-child{text-align:left}
+thead th{font-size:9px;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);
+  font-weight:500;background:var(--panel-2);position:sticky;top:0}
+tbody tr:hover td{background:var(--panel-2)}
 tbody tr:last-child td{border-bottom:0}
-td.n{font-family:"IBM Plex Mono",monospace;font-variant-numeric:tabular-nums;white-space:nowrap}
-tr.today td{background:var(--accent-soft)}
-.dim{opacity:.55}
+tr.hi td{background:var(--accent-dim)}
+tr.dim td{color:var(--muted)}
 
-.note{background:var(--surface);border:1px solid var(--rule);border-left:3px solid var(--accent);
-  border-radius:0 8px 8px 0;padding:15px 19px;margin:0 0 22px;box-shadow:var(--shadow);
-  font-size:14.5px}
-.note.bad{border-left-color:var(--bear)}
-.note b{font-weight:600}
+.note{font-size:11.5px;line-height:1.5;color:var(--ink-2);border-left:2px solid var(--bear);
+  padding:6px 10px;margin:9px 0 0;background:var(--panel-2)}
+.note b{color:var(--ink);font-weight:600}
 .hidden{display:none}
-#err{color:var(--bear)}
-.tip{position:fixed;pointer-events:none;background:var(--ink);color:var(--bg);
-  font-family:"IBM Plex Mono",monospace;font-size:11px;padding:6px 9px;border-radius:4px;
-  opacity:0;transition:opacity .1s;z-index:9;white-space:pre;line-height:1.5}
+#err{margin:14px 0}
+.tip{position:fixed;pointer-events:none;z-index:9;background:#000;color:var(--ink);
+  border:1px solid var(--rule-2);font-family:"IBM Plex Mono",monospace;font-size:10.5px;
+  padding:5px 8px;border-radius:3px;opacity:0;transition:opacity .08s;white-space:pre;line-height:1.45}
 </style>
 </head>
 <body>
 <div class="wrap">
 
-<header>
-  <p class="eyebrow">Wyckoff Day Trading Timing Model</p>
-  <h1>FuturesPulse</h1>
+<div class="topbar">
+  <div class="brand">Futures<span>Pulse</span></div>
   <div id="status">loading…</div>
-</header>
+</div>
 
-<div class="controls">
+<div class="ctl">
   <select id="sym"><option value="ES">ES</option></select>
   <div class="seg" role="group" aria-label="Session basis">
-    <button id="b-rth" aria-pressed="true">RTH Session</button>
-    <button id="b-daily" aria-pressed="false">Daily</button>
+    <button class="btn" id="b-rth" aria-pressed="true">RTH</button>
+    <button class="btn" id="b-daily" aria-pressed="false">Daily</button>
   </div>
   <select id="look">
-    <option value="0">All history</option>
-    <option value="26">Last 26 per weekday</option>
-    <option value="13">Last 13 per weekday</option>
-    <option value="7">Last 7 per weekday</option>
+    <option value="0">all history</option>
+    <option value="26">last 26 / weekday</option>
+    <option value="13">last 13 / weekday</option>
+    <option value="7">last 7 / weekday</option>
   </select>
-  <button id="loadlocal">Load local file…</button>
-  <input type="file" id="fileinput" class="hidden" multiple accept=".json">
+  <div class="spacer"></div>
+  <select id="daypick" title="session to inspect"></select>
 </div>
+
 <div id="err"></div>
 
 <main id="app" class="hidden">
 
-<section>
-  <h2><span class="num">§3</span>Will today close green or red?</h2>
-  <p class="lede">Historical base rate for this weekday, with the sample size and confidence
-  interval that decide whether it means anything.</p>
-  <dl class="tiles" id="dir-tiles"></dl>
-  <div class="card">
-    <h3>Green rate by weekday</h3>
-    <p class="cap" id="dir-cap"></p>
-    <div class="chartbox"><svg id="dir-chart" role="img"></svg></div>
-    <div class="legend">
-      <span><i style="background:var(--bull)"></i>above baseline</span>
-      <span><i style="background:var(--bear)"></i>below baseline</span>
-      <span>│ 95% confidence interval</span>
-      <span>┈ baseline &amp; the 50% line</span>
-    </div>
-  </div>
-  <div class="tbl-wrap"><table id="dir-table"></table></div>
-  <div id="dir-note"></div>
-</section>
+  <div class="cols">
+    <!-- direction ------------------------------------------------------- -->
+    <section class="panel">
+      <div class="phead"><span class="n">3</span><h2>Green / Red Day Expectations</h2>
+        <span class="sub" id="dir-sub"></span></div>
+      <div class="pbody">
+        <dl class="readout" id="dir-read"></dl>
+        <div class="scroll"><svg id="dir-chart" role="img"></svg></div>
+        <table id="dir-table"></table>
+        <div id="dir-note"></div>
+      </div>
+    </section>
 
-<section>
-  <h2><span class="num">§3</span>How far will it travel?</h2>
-  <p class="lede">Session high minus low, as a distribution rather than an average — range is
-  right-skewed, so the mean sits well above a typical day.</p>
-  <dl class="tiles" id="rng-tiles"></dl>
-  <div class="card">
-    <h3>Range by weekday</h3>
-    <p class="cap" id="rng-cap"></p>
-    <div class="chartbox"><svg id="rng-chart" role="img"></svg></div>
-    <div class="legend">
-      <span><i style="background:var(--accent);opacity:.35"></i>p25–p75 (half of all sessions)</span>
-      <span><i style="background:var(--accent)"></i>median</span>
-      <span>│ p10–p90</span>
-    </div>
+    <!-- range ----------------------------------------------------------- -->
+    <section class="panel">
+      <div class="phead"><span class="n">3</span><h2>Daily Range by Weekday</h2>
+        <span class="sub" id="rng-sub"></span></div>
+      <div class="pbody">
+        <dl class="readout" id="rng-read"></dl>
+        <div class="scroll"><svg id="rng-chart" role="img"></svg></div>
+        <table id="rng-table"></table>
+      </div>
+    </section>
   </div>
-  <div class="tbl-wrap"><table id="rng-table"></table></div>
-</section>
 
-<section>
-  <h2><span class="num">✓</span>Engine proof</h2>
-  <p class="lede">The ZigZag and wave measurements running on a real session, so the engine can be
-  checked by eye rather than trusted.</p>
-  <div class="controls" style="margin-top:0">
-    <select id="daypick"></select>
-  </div>
-  <div class="card">
-    <h3 id="day-title">—</h3>
-    <p class="cap" id="day-cap"></p>
-    <div class="chartbox"><svg id="day-chart" role="img"></svg></div>
-  </div>
-  <div class="tbl-wrap"><table id="wave-table"></table></div>
-</section>
+  <!-- session ----------------------------------------------------------- -->
+  <section class="panel" style="margin-top:12px">
+    <div class="phead"><span class="n">✓</span><h2 id="day-title">Session</h2>
+      <span class="sub" id="day-sub"></span></div>
+    <div class="pbody">
+      <dl class="readout" id="day-read"></dl>
+      <div class="scroll"><svg id="day-chart" role="img"></svg></div>
+    </div>
+  </section>
+
+  <section class="panel" style="margin-top:12px">
+    <div class="phead"><h2>Waves</h2><span class="sub" id="wave-sub"></span></div>
+    <div class="pbody" style="padding-top:0"><div class="scroll" style="max-height:340px;overflow-y:auto">
+      <table id="wave-table"></table></div></div>
+  </section>
 
 </main>
 </div>
@@ -219,451 +181,392 @@ tr.today td{background:var(--accent-soft)}
 <script type="module">
 import { zigzag, waveTable, biggestWaveIn } from '../engine/zigzag.js';
 
-/* ── formatting: always the session timezone, never the viewer's ────────────── */
-let TZ = 'America/Chicago';
-const F = {};
-const mk = o => new Intl.DateTimeFormat('en-US', {timeZone: TZ, ...o});
+/* ── formatting — always the session timezone, never the viewer's ───────── */
+let TZ='America/Chicago'; const F={};
+const mk=o=>new Intl.DateTimeFormat('en-US',{timeZone:TZ,...o});
 function initFmt(){
-  F.day  = new Intl.DateTimeFormat('en-CA',{timeZone:TZ,year:'numeric',month:'2-digit',day:'2-digit'});
-  F.hm   = mk({hour:'2-digit',minute:'2-digit',hour12:false});
-  F.wd   = mk({weekday:'long'});
-  F.nice = mk({weekday:'short',month:'short',day:'numeric',year:'numeric'});
+  F.day =new Intl.DateTimeFormat('en-CA',{timeZone:TZ,year:'numeric',month:'2-digit',day:'2-digit'});
+  F.hm  =mk({hour:'2-digit',minute:'2-digit',hour12:false});
+  F.wd  =mk({weekday:'long'});
+  F.nice=mk({weekday:'short',month:'short',day:'numeric',year:'numeric'});
 }
-const num = (v,d=2) => v==null||!isFinite(v) ? '—' : v.toFixed(d);
-const pct = v => v==null ? '—' : (v*100).toFixed(1)+'%';
-const usd = v => v==null ? '—' : '$'+Math.round(v).toLocaleString();
+const n2=(v,d=2)=>v==null||!isFinite(v)?'—':v.toFixed(d);
+const pc=v=>v==null?'—':(v*100).toFixed(1)+'%';
+const $ =v=>v==null?'—':'$'+Math.round(v).toLocaleString();
+const k =v=>v==null?'—':v>=1e6?(v/1e6).toFixed(1)+'M':v>=1e3?Math.round(v/1e3)+'k':String(v);
 
-/* ── statistics ─────────────────────────────────────────────────────────────── */
-// Wilson score interval — behaves sanely at small n, unlike the normal approximation.
-function wilson(k,n,z=1.96){
+/* ── statistics ────────────────────────────────────────────────────────── */
+// Wilson score interval — stays sane at small n, unlike the normal approximation.
+function wilson(kk,n,z=1.96){
   if(!n) return [0,1];
-  const p=k/n, d=1+z*z/n;
-  const c=(p+z*z/(2*n))/d;
-  const m=z*Math.sqrt(p*(1-p)/n + z*z/(4*n*n))/d;
-  return [c-m, c+m];
+  const p=kk/n,d=1+z*z/n,c=(p+z*z/(2*n))/d;
+  const m=z*Math.sqrt(p*(1-p)/n+z*z/(4*n*n))/d;
+  return [c-m,c+m];
 }
-function quantile(sorted,q){
-  if(!sorted.length) return null;
-  const i=(sorted.length-1)*q, lo=Math.floor(i), hi=Math.ceil(i);
-  return lo===hi ? sorted[lo] : sorted[lo]+(sorted[hi]-sorted[lo])*(i-lo);
-}
+const q=(a,x)=>{if(!a.length)return null;const i=(a.length-1)*x,lo=Math.floor(i),hi=Math.ceil(i);
+  return lo===hi?a[lo]:a[lo]+(a[hi]-a[lo])*(i-lo);};
 
-/* ── data ───────────────────────────────────────────────────────────────────── */
-const S = { bars:[], manifest:null, basis:'rth', look:0, sessions:[], bySym:{} };
-const WD = ['Monday','Tuesday','Wednesday','Thursday','Friday'];
+const S={bars:[],manifest:null,basis:'rth',look:0,sessions:[]};
+const WD=['Monday','Tuesday','Wednesday','Thursday','Friday'];
+const W3=['Mon','Tue','Wed','Thu','Fri'];
 
 async function loadRemote(sym){
-  const base = `../data/${sym}`;
-  const man = await (await fetch(`${base}/index.json`)).json();
-  TZ = man.tz || TZ; initFmt();
-  const parts = await Promise.all(man.months.map(m =>
-    fetch(`${base}/${m}.json`).then(r=>r.json())));
+  const base=`../data/${sym}`;
+  const man=await (await fetch(`${base}/index.json`)).json();
+  TZ=man.tz||TZ; initFmt();
+  const parts=await Promise.all(man.months.map(m=>fetch(`${base}/${m}.json`).then(r=>r.json())));
   const bars=[];
-  for(const p of parts)
-    for(let i=0;i<p.t.length;i++)
-      bars.push({t:p.t[i],o:p.o[i],h:p.h[i],l:p.l[i],c:p.c[i],v:p.v[i]});
+  for(const p of parts) for(let i=0;i<p.t.length;i++)
+    bars.push({t:p.t[i],o:p.o[i],h:p.h[i],l:p.l[i],c:p.c[i],v:p.v[i]});
   bars.sort((a,b)=>a.t-b.t);
-  return {bars, manifest:man};
+  return {bars,manifest:man};
 }
 
-/* Group bars into sessions.
-   RTH   — 08:30–15:00 CT, session date = calendar date.
-   Daily — the full CME session, 17:00 previous day → 16:00. A bar at or after
-           17:00 belongs to the NEXT trade date, which is the exchange convention. */
-function buildSessions(bars, basis){
-  const map = new Map();
+/* Bars are labelled by their CLOSING edge, so every session decision keys on the
+   bar's START instant (t − 3min). Otherwise 15:00 falls outside RTH and 08:33
+   would be treated as the open. */
+function buildSessions(bars,basis){
+  const map=new Map();
   for(const b of bars){
-    // Bars are labelled by their CLOSING edge, so bucket on the bar's START
-    // instant — otherwise the 15:00 bar lands outside RTH and 08:33 opens it.
-    const d = new Date(b.t - 180000);
-    const hm = F.hm.format(d).split(':').map(Number);
-    const mins = hm[0]*60+hm[1];
-    let key = F.day.format(d);
-    if(basis==='rth'){
-      if(mins < 510 || mins >= 900) continue;      // 08:30 … 14:59
-    }else{
-      if(mins >= 1020){                            // 17:00+ rolls to the next trade date
-        const nd = new Date(b.t - 180000 + 86400000);
-        key = F.day.format(nd);
-      } else if(mins >= 960) continue;             // 16:00–16:59 maintenance break
+    const d=new Date(b.t-180000);
+    const [H,M]=F.hm.format(d).split(':').map(Number); const mins=H*60+M;
+    let key=F.day.format(d);
+    if(basis==='rth'){ if(mins<510||mins>=900) continue; }
+    else{
+      if(mins>=1020) key=F.day.format(new Date(b.t-180000+86400000));   // 17:00+ → next trade date
+      else if(mins>=960) continue;                                      // 16:00–17:00 break
     }
     if(!map.has(key)) map.set(key,[]);
     map.get(key).push(b);
   }
-  const out=[];
-  const need = basis==='rth' ? 128 : 400;          // 130 bars RTH; ~460 for the 23h session
+  const need=basis==='rth'?128:400, out=[];
   for(const [date,bs] of map){
-    if(bs.length < need) continue;                 // drop holidays and half days
-    let h=-Infinity,l=Infinity;
-    for(const b of bs){ if(b.h>h)h=b.h; if(b.l<l)l=b.l; }
-    const o=bs[0].o, c=bs[bs.length-1].c;
-    const wd = F.wd.format(new Date(bs[0].t));
+    if(bs.length<need) continue;
+    const wd=F.wd.format(new Date(bs[0].t-180000));
     if(!WD.includes(wd)) continue;
-    out.push({date, wd, o, h, l, c, bars:bs, range:h-l, green:c>o});
+    let h=-Infinity,l=Infinity; for(const b of bs){if(b.h>h)h=b.h; if(b.l<l)l=b.l;}
+    const o=bs[0].o,c=bs[bs.length-1].c;
+    out.push({date,wd,o,h,l,c,bars:bs,range:h-l,green:c>o});
   }
   out.sort((a,b)=>a.date<b.date?-1:1);
   return out;
 }
 
-function weekdayStats(sessions, look){
-  const base = sessions.length ? sessions.filter(s=>s.green).length/sessions.length : null;
-  const rows = WD.map(wd=>{
-    let s = sessions.filter(x=>x.wd===wd);
-    if(look>0) s = s.slice(-look);
-    const n=s.length, k=s.filter(x=>x.green).length;
-    const p = n? k/n : null;
-    const [lo,hi] = wilson(k,n);
-    const r = s.map(x=>x.range).sort((a,b)=>a-b);
-    return {wd,n,k,p,lo,hi,
-      straddles: n===0 || (lo<=0.5 && hi>=0.5),
-      edge: (p==null||base==null)?null:p-base,
-      p10:quantile(r,.10), p25:quantile(r,.25), p50:quantile(r,.50),
-      p75:quantile(r,.75), p90:quantile(r,.90),
-      mean: n? r.reduce((a,b)=>a+b,0)/n : null};
+function stats(sessions,look){
+  const base=sessions.length?sessions.filter(s=>s.green).length/sessions.length:null;
+  const rows=WD.map((wd,i)=>{
+    let s=sessions.filter(x=>x.wd===wd); if(look>0) s=s.slice(-look);
+    const n=s.length,kk=s.filter(x=>x.green).length,p=n?kk/n:null;
+    const [lo,hi]=wilson(kk,n);
+    const r=s.map(x=>x.range).sort((a,b)=>a-b);
+    return {wd,short:W3[i],n,k:kk,red:n-kk,p,lo,hi,
+      straddles:n===0||(lo<=.5&&hi>=.5),
+      edge:(p==null||base==null)?null:p-base,
+      p10:q(r,.10),p25:q(r,.25),p50:q(r,.50),p75:q(r,.75),p90:q(r,.90),
+      mean:n?r.reduce((a,b)=>a+b,0)/n:null};
   });
-  const allR = sessions.map(x=>x.range).sort((a,b)=>a-b);
-  return {rows, base, baseN:sessions.length,
-    allMedian:quantile(allR,.50),
-    allMean: sessions.length? allR.reduce((a,b)=>a+b,0)/allR.length : null};
+  const all=sessions.map(x=>x.range).sort((a,b)=>a-b);
+  const ranked=[...rows].filter(r=>r.n).sort((a,b)=>b.p50-a.p50);
+  ranked.forEach((r,i)=>r.rank=i+1);
+  return {rows,base,baseN:sessions.length,allMedian:q(all,.50),
+    allMean:all.length?all.reduce((a,b)=>a+b,0)/all.length:null};
 }
 
-/* ── tiny SVG helpers ───────────────────────────────────────────────────────── */
+/* ── svg helpers ───────────────────────────────────────────────────────── */
 const NS='http://www.w3.org/2000/svg';
-const el=(n,a={})=>{const e=document.createElementNS(NS,n);
-  for(const k in a) e.setAttribute(k,a[k]); return e;};
+const el=(n,a={})=>{const e=document.createElementNS(NS,n);for(const kk in a)e.setAttribute(kk,a[kk]);return e;};
+const tx=(t,a)=>{const e=el('text',a);e.textContent=t;return e;};
 const tip=document.getElementById('tip');
-function hover(node,text){
-  node.addEventListener('pointerenter',e=>{tip.textContent=text;tip.style.opacity='1';});
+function hov(node,text){
+  node.style.cursor='crosshair';
+  node.addEventListener('pointerenter',()=>{tip.textContent=text;tip.style.opacity='1';});
   node.addEventListener('pointermove',e=>{
-    tip.style.left=Math.min(e.clientX+14,innerWidth-tip.offsetWidth-8)+'px';
-    tip.style.top=(e.clientY-tip.offsetHeight-10)+'px';});
+    tip.style.left=Math.min(e.clientX+13,innerWidth-tip.offsetWidth-6)+'px';
+    tip.style.top =Math.max(4,e.clientY-tip.offsetHeight-9)+'px';});
   node.addEventListener('pointerleave',()=>{tip.style.opacity='0';});
 }
-const CSSV = n => getComputedStyle(document.body).getPropertyValue(n).trim();
+const C=n=>getComputedStyle(document.body).getPropertyValue(n).trim();
+const setSvg=(s,w,h,label)=>{s.textContent='';s.setAttribute('viewBox',`0 0 ${w} ${h}`);
+  s.setAttribute('width',w);s.setAttribute('height',h);s.setAttribute('aria-label',label);return s;};
 
-/* ── chart: green rate by weekday, dot + interval ───────────────────────────── */
-// A proportion hovering near 50% is not a magnitude-from-zero quantity, so bars
-// would misencode it. Point estimate + interval against a reference line is the
-// honest form: the interval is the finding, not a decoration.
-function drawDirection(stats, todayWd){
+/* ── direction — matched to the original app ───────────────────────────── */
+// Chunky paired bars on a navy field, counts and percentages printed inside in
+// white, weekday in white below, a gold frame around today's column, and the
+// "Exp. Green / Exp. Red" call above the skewed ones. What the original could
+// not show sits underneath as small type: n, and the 95% interval. A column
+// whose interval spans 50% is greyed and loses its call.
+const RANK_RAMP=['#C4610D','#D97F22','#C9924A','#7B8794','#56626E'];
+
+function drawDirection(st,todayWd){
   const svg=document.getElementById('dir-chart');
-  svg.textContent='';
-  const W=Math.max(560,svg.parentNode.clientWidth||700), H=300;
-  const M={t:16,r:22,b:34,l:46};
-  svg.setAttribute('viewBox',`0 0 ${W} ${H}`); svg.setAttribute('width',W); svg.setAttribute('height',H);
-  svg.setAttribute('aria-label','Green rate by weekday with 95% confidence intervals');
-  const iw=W-M.l-M.r, ih=H-M.t-M.b;
-  const lo=0.15, hi=0.90;
-  const y=v=>M.t+ih-((v-lo)/(hi-lo))*ih;
-  const x=i=>M.l+iw*(i+0.5)/WD.length;
+  const W=Math.max(430,svg.parentNode.clientWidth||520),H=232;
+  setSvg(svg,W,H,'Green and red session counts by weekday with 95% intervals');
+  const M={t:20,r:6,b:40,l:6}, iw=W-M.l-M.r, ih=H-M.t-M.b;
+  svg.appendChild(el('rect',{x:M.l,y:M.t,width:iw,height:ih,fill:'#141B2D',rx:3}));
 
-  for(let g=0.2;g<=0.9;g+=0.1){
-    svg.appendChild(el('line',{x1:M.l,x2:W-M.r,y1:y(g),y2:y(g),stroke:CSSV('--grid'),'stroke-width':1}));
-    svg.appendChild(Object.assign(el('text',{x:M.l-9,y:y(g)+4,'text-anchor':'end',
-      'font-size':10,fill:CSSV('--muted')}),{textContent:Math.round(g*100)+'%'}));
-  }
-  // the 50% decision line, and the symbol's own baseline
-  svg.appendChild(el('line',{x1:M.l,x2:W-M.r,y1:y(.5),y2:y(.5),stroke:CSSV('--ink-2'),
-    'stroke-width':1.5,'stroke-dasharray':'2 3'}));
-  if(stats.base!=null){
-    svg.appendChild(el('line',{x1:M.l,x2:W-M.r,y1:y(stats.base),y2:y(stats.base),
-      stroke:CSSV('--accent'),'stroke-width':1.5,'stroke-dasharray':'6 4'}));
-    svg.appendChild(Object.assign(el('text',{x:W-M.r,y:y(stats.base)-6,'text-anchor':'end',
-      'font-size':10,fill:CSSV('--accent')}),
-      {textContent:`baseline ${(stats.base*100).toFixed(1)}%`}));
-  }
+  const maxN=Math.max(1,...st.rows.map(r=>Math.max(r.k,r.red)));
+  const base=M.t+ih-6, y=v=>base-(v/maxN)*(ih-16);
+  const gw=iw/5, bw=Math.min(30,gw*0.34);
 
-  stats.rows.forEach((r,i)=>{
-    if(r.n===0) return;
-    const cx=x(i), col = r.straddles ? CSSV('--muted') : (r.p>0.5?CSSV('--bull'):CSSV('--bear'));
-    const g=el('g',{opacity:r.straddles?0.75:1});
-    g.appendChild(el('line',{x1:cx,x2:cx,y1:y(r.hi),y2:y(r.lo),stroke:col,'stroke-width':2,
-      'stroke-linecap':'round'}));
-    for(const b of [r.lo,r.hi])
-      g.appendChild(el('line',{x1:cx-5,x2:cx+5,y1:y(b),y2:y(b),stroke:col,'stroke-width':2}));
-    g.appendChild(el('circle',{cx,cy:y(r.p),r:6,fill:col,stroke:CSSV('--surface'),'stroke-width':2}));
-    if(r.wd===todayWd)
-      g.appendChild(el('rect',{x:cx-24,y:M.t,width:48,height:ih,fill:CSSV('--accent'),
-        opacity:.07,rx:4}));
-    hover(g,`${r.wd}\n${(r.p*100).toFixed(1)}% green   n=${r.n}\n95% CI ${(r.lo*100).toFixed(1)}–${(r.hi*100).toFixed(1)}%\n`
-      +(r.straddles?'interval spans 50% — no edge':'interval clears 50%'));
+  st.rows.forEach((r,i)=>{
+    const gx=M.l+gw*i, cx=gx+gw/2, dim=r.straddles;
+    const g=el('g',{opacity:dim?.55:1});
+
+    if(r.wd===todayWd)                                  // gold frame, as in the original
+      svg.appendChild(el('rect',{x:gx+2,y:M.t+2,width:gw-4,height:ih-4,fill:'none',
+        stroke:C('--accent'),'stroke-width':1.4,rx:3}));
+
+    if(r.n){
+      if(!dim) g.appendChild(tx(r.p>.5?'Exp. Green':'Exp. Red',
+        {x:cx,y:M.t-7,'text-anchor':'middle','font-size':9.5,'font-weight':600,
+         fill:r.p>.5?C('--bull'):C('--bear')}));
+
+      // The original puts the bigger count on the left, so Tue leads with green
+      // and Mon leads with red. Sort rather than fixing the order.
+      const pair=[{v:r.k,col:C('--bull')},{v:r.red,col:C('--bear')}].sort((a,b)=>b.v-a.v);
+      pair.forEach(({v:val,col},slot)=>{
+        const x=slot===0 ? cx-bw-1 : cx+1, yy=y(val), hh=Math.max(2,base-yy);
+        g.appendChild(el('rect',{x,y:yy,width:bw,height:hh,fill:col,rx:2}));
+        if(hh>26){
+          g.appendChild(tx(val,{x:x+bw/2,y:yy+14,'text-anchor':'middle','font-size':12,
+            'font-weight':700,fill:'#fff'}));
+          g.appendChild(tx(Math.round((val/r.n)*100)+'%',{x:x+bw/2,y:yy+26,'text-anchor':'middle',
+            'font-size':10,'font-weight':600,fill:'#fff'}));
+        } else if(hh>13){
+          g.appendChild(tx(val,{x:x+bw/2,y:yy+11,'text-anchor':'middle','font-size':10,
+            'font-weight':700,fill:'#fff'}));
+        }
+      });
+      hov(g,`${r.wd}\n${r.k} green / ${r.red} red   n=${r.n}\nrate ${pc(r.p)}\n95% CI ${pc(r.lo)} – ${pc(r.hi)}\n`
+        +(dim?'spans 50% — no edge':'clears 50%'));
+    }
     svg.appendChild(g);
-    svg.appendChild(Object.assign(el('text',{x:cx,y:H-16,'text-anchor':'middle','font-size':11,
-      fill:r.wd===todayWd?CSSV('--accent'):CSSV('--muted'),
-      'font-weight':r.wd===todayWd?600:400}),{textContent:r.wd.slice(0,3)}));
-    svg.appendChild(Object.assign(el('text',{x:cx,y:H-4,'text-anchor':'middle','font-size':9,
-      fill:CSSV('--muted')}),{textContent:'n='+r.n}));
+    svg.appendChild(tx(r.short,{x:cx,y:H-27,'text-anchor':'middle','font-size':11,'font-weight':600,
+      fill:r.wd===todayWd?C('--accent'):C('--ink')}));
+    svg.appendChild(tx(r.n?pc(r.p):'—',{x:cx,y:H-15,'text-anchor':'middle','font-size':9.5,
+      'font-weight':600,fill:dim?C('--muted'):(r.p>.5?C('--bull'):C('--bear'))}));
+    svg.appendChild(tx(r.n?`n=${r.n} · ${(r.lo*100).toFixed(0)}–${(r.hi*100).toFixed(0)}%`:'',
+      {x:cx,y:H-4,'text-anchor':'middle','font-size':8.5,fill:C('--muted')}));
   });
 }
 
-/* ── chart: range distribution by weekday ──────────────────────────────────── */
-function drawRange(stats, todayWd){
+/* ── range — the original's ranked heat bars, carrying their spread ─────── */
+// Bar height is the median, rank printed inside, coloured down a single amber→
+// slate ramp exactly as the original ranked #1–#5. The thin whisker adds p10–p90,
+// which the original left out and which is the part that actually varies.
+function drawRange(st,todayWd){
   const svg=document.getElementById('rng-chart');
-  svg.textContent='';
-  const W=Math.max(560,svg.parentNode.clientWidth||700), H=300;
-  const M={t:16,r:22,b:34,l:52};
-  svg.setAttribute('viewBox',`0 0 ${W} ${H}`); svg.setAttribute('width',W); svg.setAttribute('height',H);
-  svg.setAttribute('aria-label','Session range distribution by weekday');
-  const iw=W-M.l-M.r, ih=H-M.t-M.b;
-  const top=Math.max(...stats.rows.map(r=>r.p90||0))*1.08;
-  const y=v=>M.t+ih-(v/top)*ih;
-  const x=i=>M.l+iw*(i+0.5)/WD.length;
-  const bw=Math.min(52, iw/WD.length*0.45);
+  const W=Math.max(430,svg.parentNode.clientWidth||520),H=232;
+  setSvg(svg,W,H,'Session range by weekday, ranked by median, with p10–p90 spread');
+  const M={t:20,r:6,b:40,l:6}, iw=W-M.l-M.r, ih=H-M.t-M.b;
+  svg.appendChild(el('rect',{x:M.l,y:M.t,width:iw,height:ih,fill:'#141B2D',rx:3}));
 
-  const step = top>200?50:top>100?25:10;
-  for(let g=0;g<=top;g+=step){
-    svg.appendChild(el('line',{x1:M.l,x2:W-M.r,y1:y(g),y2:y(g),stroke:CSSV('--grid'),'stroke-width':1}));
-    svg.appendChild(Object.assign(el('text',{x:M.l-9,y:y(g)+4,'text-anchor':'end','font-size':10,
-      fill:CSSV('--muted')}),{textContent:g}));
-  }
-  if(stats.allMedian!=null){
-    svg.appendChild(el('line',{x1:M.l,x2:W-M.r,y1:y(stats.allMedian),y2:y(stats.allMedian),
-      stroke:CSSV('--accent'),'stroke-width':1.5,'stroke-dasharray':'6 4'}));
-    svg.appendChild(Object.assign(el('text',{x:W-M.r,y:y(stats.allMedian)-6,'text-anchor':'end',
-      'font-size':10,fill:CSSV('--accent')}),
-      {textContent:`all-day median ${stats.allMedian.toFixed(1)}`}));
+  const top=Math.max(...st.rows.map(r=>r.p90||0))*1.04||1;
+  const base=M.t+ih-4, y=v=>base-(v/top)*(ih-14);
+  const gw=iw/5, bw=Math.min(52,gw*0.6);
+
+  if(st.allMedian!=null){
+    svg.appendChild(el('line',{x1:M.l+3,x2:W-M.r-3,y1:y(st.allMedian),y2:y(st.allMedian),
+      stroke:C('--accent'),'stroke-dasharray':'4 3','stroke-opacity':.8}));
+    svg.appendChild(tx(`all-day median ${st.allMedian.toFixed(1)}`,{x:W-M.r-6,y:y(st.allMedian)-4,
+      'text-anchor':'end','font-size':9,fill:C('--accent')}));
   }
 
-  stats.rows.forEach((r,i)=>{
-    if(r.n===0) return;
-    const cx=x(i), g=el('g');
+  st.rows.forEach((r,i)=>{
+    if(!r.n) return;
+    const gx=M.l+gw*i, cx=gx+gw/2, g=el('g');
     if(r.wd===todayWd)
-      g.appendChild(el('rect',{x:cx-bw/2-8,y:M.t,width:bw+16,height:ih,fill:CSSV('--accent'),
-        opacity:.07,rx:4}));
-    g.appendChild(el('line',{x1:cx,x2:cx,y1:y(r.p90),y2:y(r.p10),stroke:CSSV('--muted'),'stroke-width':1.5}));
+      svg.appendChild(el('rect',{x:gx+2,y:M.t+2,width:gw-4,height:ih-4,fill:'none',
+        stroke:C('--accent'),'stroke-width':1.4,rx:3}));
+
+    g.appendChild(el('rect',{x:cx-bw/2,y:y(r.p50),width:bw,height:Math.max(2,base-y(r.p50)),
+      fill:RANK_RAMP[(r.rank||1)-1],rx:2}));
+    g.appendChild(el('line',{x1:cx,x2:cx,y1:y(r.p90),y2:y(r.p10),stroke:'#B9C4D0',
+      'stroke-opacity':.7,'stroke-width':1.4}));
     for(const b of [r.p10,r.p90])
-      g.appendChild(el('line',{x1:cx-6,x2:cx+6,y1:y(b),y2:y(b),stroke:CSSV('--muted'),'stroke-width':1.5}));
-    g.appendChild(el('rect',{x:cx-bw/2,y:y(r.p75),width:bw,height:Math.max(2,y(r.p25)-y(r.p75)),
-      fill:CSSV('--accent'),opacity:.35,rx:3}));
-    g.appendChild(el('line',{x1:cx-bw/2,x2:cx+bw/2,y1:y(r.p50),y2:y(r.p50),
-      stroke:CSSV('--accent'),'stroke-width':3,'stroke-linecap':'round'}));
-    hover(g,`${r.wd}   n=${r.n}\nmedian ${r.p50.toFixed(2)} pts\np25–p75 ${r.p25.toFixed(1)}–${r.p75.toFixed(1)}\np10–p90 ${r.p10.toFixed(1)}–${r.p90.toFixed(1)}\nmean ${r.mean.toFixed(2)}`);
+      g.appendChild(el('line',{x1:cx-6,x2:cx+6,y1:y(b),y2:y(b),stroke:'#B9C4D0',
+        'stroke-opacity':.7,'stroke-width':1.4}));
+    g.appendChild(tx('#'+r.rank,{x:cx,y:y(r.p50)+16,'text-anchor':'middle','font-size':12,
+      'font-weight':700,fill:'#fff'}));
+    hov(g,`${r.wd}   n=${r.n}\nmedian ${r.p50.toFixed(2)} pts\np25–p75 ${r.p25.toFixed(1)} – ${r.p75.toFixed(1)}\np10–p90 ${r.p10.toFixed(1)} – ${r.p90.toFixed(1)}\nmean ${r.mean.toFixed(2)}`);
     svg.appendChild(g);
-    svg.appendChild(Object.assign(el('text',{x:cx,y:H-16,'text-anchor':'middle','font-size':11,
-      fill:r.wd===todayWd?CSSV('--accent'):CSSV('--muted'),
-      'font-weight':r.wd===todayWd?600:400}),{textContent:r.wd.slice(0,3)}));
-    svg.appendChild(Object.assign(el('text',{x:cx,y:H-4,'text-anchor':'middle','font-size':9,
-      fill:CSSV('--muted')}),{textContent:'n='+r.n}));
+    svg.appendChild(tx(r.short,{x:cx,y:H-27,'text-anchor':'middle','font-size':11,'font-weight':600,
+      fill:r.wd===todayWd?C('--accent'):C('--ink')}));
+    svg.appendChild(tx(r.p50.toFixed(1),{x:cx,y:H-15,'text-anchor':'middle','font-size':9.5,
+      'font-weight':600,fill:C('--accent')}));
+    svg.appendChild(tx(`n=${r.n} · ${r.p25.toFixed(0)}–${r.p75.toFixed(0)}`,
+      {x:cx,y:H-4,'text-anchor':'middle','font-size':8.5,fill:C('--muted')}));
   });
 }
 
-/* ── chart: one session, candles + ZigZag ──────────────────────────────────── */
+/* ── session chart ─────────────────────────────────────────────────────── */
 function drawSession(sess){
-  const svg=document.getElementById('day-chart'); svg.textContent='';
-  const bars=sess.bars;
-  const W=Math.max(700,svg.parentNode.clientWidth||900), H=380;
-  const M={t:14,r:56,b:26,l:8};
-  svg.setAttribute('viewBox',`0 0 ${W} ${H}`); svg.setAttribute('width',W); svg.setAttribute('height',H);
-  svg.setAttribute('aria-label',`${sess.date} session with ZigZag overlay`);
-  const iw=W-M.l-M.r, ih=H-M.t-M.b;
-  let hi=-Infinity, lo=Infinity;
-  for(const b of bars){ if(b.h>hi)hi=b.h; if(b.l<lo)lo=b.l; }
-  const pad=(hi-lo)*0.06; hi+=pad; lo-=pad;
-  const y=v=>M.t+ih-((v-lo)/(hi-lo))*ih;
-  const x=i=>M.l+iw*(i+0.5)/bars.length;
-  const cw=Math.max(1.5, iw/bars.length*0.62);
-
-  const stepP = (hi-lo)>60?20:(hi-lo)>25?10:5;
-  for(let g=Math.ceil(lo/stepP)*stepP; g<hi; g+=stepP){
-    svg.appendChild(el('line',{x1:M.l,x2:W-M.r,y1:y(g),y2:y(g),stroke:CSSV('--grid'),'stroke-width':1}));
-    svg.appendChild(Object.assign(el('text',{x:W-M.r+7,y:y(g)+4,'font-size':10,
-      fill:CSSV('--muted')}),{textContent:g}));
+  const svg=document.getElementById('day-chart'), bars=sess.bars;
+  const W=Math.max(760,svg.parentNode.clientWidth||1100),H=330;
+  setSvg(svg,W,H,`${sess.date} session with ZigZag overlay`);
+  const M={t:8,r:46,b:18,l:6}, iw=W-M.l-M.r, ih=H-M.t-M.b;
+  let hi=-Infinity,lo=Infinity; for(const b of bars){if(b.h>hi)hi=b.h;if(b.l<lo)lo=b.l;}
+  const pad=(hi-lo)*.05; hi+=pad; lo-=pad;
+  const y=v=>M.t+ih-((v-lo)/(hi-lo))*ih, x=i=>M.l+iw*(i+.5)/bars.length;
+  const cw=Math.max(1.4,iw/bars.length*.66);
+  const rg=hi-lo, sp=rg>120?25:rg>60?10:rg>25?5:2.5;
+  for(let g=Math.ceil(lo/sp)*sp;g<hi;g+=sp){
+    svg.appendChild(el('line',{x1:M.l,x2:W-M.r,y1:y(g),y2:y(g),stroke:C('--grid')}));
+    svg.appendChild(tx(g,{x:W-M.r+4,y:y(g)+3,'font-size':9,fill:C('--muted')}));
   }
   bars.forEach((b,i)=>{
-    const up=b.c>=b.o, col=up?CSSV('--bull'):CSSV('--bear');
-    svg.appendChild(el('line',{x1:x(i),x2:x(i),y1:y(b.h),y2:y(b.l),stroke:col,'stroke-width':1}));
+    const hm=F.hm.format(new Date(b.t-180000));
+    if(hm.endsWith(':00')){
+      svg.appendChild(el('line',{x1:x(i),x2:x(i),y1:M.t,y2:M.t+ih,stroke:C('--grid')}));
+      svg.appendChild(tx(hm,{x:x(i),y:H-6,'text-anchor':'middle','font-size':9,fill:C('--muted')}));
+    }
+  });
+  bars.forEach((b,i)=>{
+    const col=b.c>=b.o?C('--bull'):C('--bear');
+    svg.appendChild(el('line',{x1:x(i),x2:x(i),y1:y(b.h),y2:y(b.l),stroke:col}));
     svg.appendChild(el('rect',{x:x(i)-cw/2,y:y(Math.max(b.o,b.c)),width:cw,
       height:Math.max(1,Math.abs(y(b.o)-y(b.c))),fill:col}));
   });
-  // hour gridlines
-  bars.forEach((b,i)=>{
-    const hm=F.hm.format(new Date(b.t));
-    if(hm.endsWith(':00')){
-      svg.appendChild(el('line',{x1:x(i),x2:x(i),y1:M.t,y2:M.t+ih,stroke:CSSV('--grid'),'stroke-width':1}));
-      svg.appendChild(Object.assign(el('text',{x:x(i),y:H-8,'text-anchor':'middle','font-size':10,
-        fill:CSSV('--muted')}),{textContent:hm}));
-    }
-  });
-
   const piv=zigzag(bars,3);
   if(piv.length>1){
-    const pts=piv.map(p=>`${x(p.i)},${y(p.price)}`).join(' ');
-    svg.appendChild(el('polyline',{points:pts,fill:'none',stroke:CSSV('--accent'),
-      'stroke-width':2,'stroke-linejoin':'round','stroke-opacity':.9}));
+    svg.appendChild(el('polyline',{points:piv.map(p=>`${x(p.i)},${y(p.price)}`).join(' '),
+      fill:'none',stroke:C('--accent'),'stroke-width':1.6,'stroke-linejoin':'round'}));
     piv.forEach(p=>{
-      const c=el('circle',{cx:x(p.i),cy:y(p.price),r:3.5,fill:CSSV('--surface'),
-        stroke:CSSV('--accent'),'stroke-width':2});
-      hover(c,`${F.hm.format(new Date(p.t))}  ${p.type==='H'?'high':'low'}\n${p.price}`);
+      const c=el('circle',{cx:x(p.i),cy:y(p.price),r:2.8,fill:C('--panel'),
+        stroke:C('--accent'),'stroke-width':1.6});
+      hov(c,`${F.hm.format(new Date(p.t))}  ${p.type==='H'?'high':'low'}\n${p.price}`);
       svg.appendChild(c);
     });
   }
   return piv;
 }
 
-/* ── render ─────────────────────────────────────────────────────────────────── */
+/* ── render ────────────────────────────────────────────────────────────── */
 function render(){
-  const sessions = buildSessions(S.bars, S.basis);
-  S.sessions = sessions;
-  const stats = weekdayStats(sessions, S.look);
-  // Sat/Sun have no session, so target the next trading weekday and say so.
-  const rawWd = F.wd.format(new Date());
-  const isTradingDay = WD.includes(rawWd);
-  const todayWd = isTradingDay ? rawWd : 'Monday';
-  const dayLabel = isTradingDay ? todayWd : `Next session · ${todayWd}`;
-  const row = stats.rows.find(r=>r.wd===todayWd) || stats.rows[0];
-  const pv = S.manifest?.pointValue || 1;
-  const basisLabel = S.basis==='rth' ? 'RTH session (08:30–15:00 CT)' : 'full 23h session';
-  const lookLabel = S.look? `last ${S.look} per weekday` : 'all history';
+  const sessions=buildSessions(S.bars,S.basis); S.sessions=sessions;
+  const st=stats(sessions,S.look);
+  const raw=F.wd.format(new Date()), live=WD.includes(raw);
+  const todayWd=live?raw:'Monday';
+  const label=live?todayWd:`next · ${todayWd}`;
+  const r=st.rows.find(x=>x.wd===todayWd)||st.rows[0];
+  const pv=S.manifest?.pointValue||1;
+  const basis=S.basis==='rth'?'RTH 08:33–15:00 CT':'full 23h session';
+  const look=S.look?`last ${S.look}/wd`:'all history';
 
-  /* direction tiles */
-  const vcls = row.straddles ? 'v-none' : (row.p>0.5?'v-bull':'v-bear');
-  const vtxt = row.straddles ? 'No detectable edge'
-             : (row.p>0.5?'Leans green':'Leans red');
-  document.getElementById('dir-tiles').innerHTML = `
-    <div class="tile"><dt>${dayLabel} — green rate</dt>
-      <div class="big" style="color:${row.straddles?'var(--ink)':(row.p>.5?'var(--bull)':'var(--bear)')}">${pct(row.p)}</div>
-      <div class="sub">${row.k} of ${row.n} sessions</div>
-      <div class="verdict ${vcls}">${vtxt}</div></div>
-    <div class="tile"><dt>95% confidence interval</dt>
-      <div class="big" style="font-size:22px">${pct(row.lo)} – ${pct(row.hi)}</div>
-      <div class="sub">${row.straddles?'spans 50% — indistinguishable from a coin flip':'clears the 50% line'}</div></div>
-    <div class="tile"><dt>Edge vs baseline</dt>
-      <div class="big">${row.edge==null?'—':(row.edge>=0?'+':'')+(row.edge*100).toFixed(1)+'pp'}</div>
-      <div class="sub">baseline ${pct(stats.base)} over ${stats.baseN} sessions</div></div>`;
-  document.getElementById('dir-cap').textContent =
-    `${S.manifest?.symbol||''} · ${basisLabel} · ${lookLabel} · close vs open`;
+  document.getElementById('dir-sub').textContent=`${basis} · ${look} · close vs open`;
+  document.getElementById('rng-sub').textContent=`${basis} · ${look} · high − low`;
 
-  document.getElementById('dir-table').innerHTML = `
-    <thead><tr><th>Weekday</th><th>n</th><th>Green</th><th>Rate</th><th>95% CI</th>
-      <th>Edge</th><th>Verdict</th></tr></thead><tbody>` +
-    stats.rows.map(r=>`<tr class="${r.wd===todayWd?'today':''} ${r.straddles?'dim':''}">
-      <td>${r.wd}</td><td class="n">${r.n}</td><td class="n">${r.k}</td>
-      <td class="n">${pct(r.p)}</td><td class="n">${pct(r.lo)} – ${pct(r.hi)}</td>
-      <td class="n">${r.edge==null?'—':(r.edge>=0?'+':'')+(r.edge*100).toFixed(1)+'pp'}</td>
-      <td>${r.straddles?'no edge':(r.p>.5?'leans green':'leans red')}</td></tr>`).join('')
-    + '</tbody>';
+  const cls=r.straddles?'':(r.p>.5?'up':'dn');
+  document.getElementById('dir-read').innerHTML=`
+    <div><dt>${label} green rate</dt><div class="v ${cls}">${pc(r.p)}</div>
+      <div class="s">${r.k}G / ${r.red}R · n=${r.n}</div></div>
+    <div><dt>95% interval</dt><div class="v sm">${pc(r.lo)} – ${pc(r.hi)}</div>
+      <div class="s">${r.straddles?'spans 50%':'clears 50%'}</div>
+      <span class="tag ${r.straddles?'t-none':(r.p>.5?'t-up':'t-dn')}">${r.straddles?'no edge':(r.p>.5?'leans green':'leans red')}</span></div>
+    <div><dt>edge vs baseline</dt><div class="v">${r.edge==null?'—':(r.edge>=0?'+':'')+(r.edge*100).toFixed(1)+'pp'}</div>
+      <div class="s">base ${pc(st.base)} · n=${st.baseN}</div></div>`;
 
-  const anyEdge = stats.rows.some(r=>!r.straddles && r.n>0);
-  document.getElementById('dir-note').innerHTML = anyEdge ? '' : `
-    <div class="note bad"><b>No weekday clears its own confidence interval.</b>
-    Across ${stats.baseN} sessions, every interval spans 50% — so on this evidence the weekday
-    does not predict direction, and any single figure quoted without its interval would overstate
-    what the data supports. The range panel below is a different story.</div>`;
+  document.getElementById('rng-read').innerHTML=`
+    <div><dt>${label} median range</dt><div class="v am">${n2(r.p50)}</div>
+      <div class="s">${$(r.p50*pv)} · #${r.rank||'—'} of 5</div></div>
+    <div><dt>p25 – p75</dt><div class="v sm">${n2(r.p25,1)} – ${n2(r.p75,1)}</div>
+      <div class="s">${$(r.p25*pv)} – ${$(r.p75*pv)}</div></div>
+    <div><dt>mean vs median</dt><div class="v sm">${n2(r.mean,1)} / ${n2(r.p50,1)}</div>
+      <div class="s">${r.mean&&r.p50?`mean +${((r.mean/r.p50-1)*100).toFixed(0)}% vs typical`:''}</div></div>`;
 
-  /* range tiles */
-  document.getElementById('rng-tiles').innerHTML = `
-    <div class="tile"><dt>${dayLabel} — typical range</dt>
-      <div class="big">${num(row.p50)}<span style="font-size:15px;color:var(--muted)"> pts</span></div>
-      <div class="sub">${usd(row.p50*pv)} · median of ${row.n}</div></div>
-    <div class="tile"><dt>Half of sessions land in</dt>
-      <div class="big" style="font-size:22px">${num(row.p25,1)} – ${num(row.p75,1)}</div>
-      <div class="sub">p25 – p75 · ${usd(row.p25*pv)} – ${usd(row.p75*pv)}</div></div>
-    <div class="tile"><dt>Mean vs median</dt>
-      <div class="big" style="font-size:22px">${num(row.mean,1)} <span style="color:var(--muted)">vs</span> ${num(row.p50,1)}</div>
-      <div class="sub">${row.mean&&row.p50?`mean sits ${((row.mean/row.p50-1)*100).toFixed(0)}% above a typical day`:''}</div></div>`;
-  document.getElementById('rng-cap').textContent =
-    `${S.manifest?.symbol||''} · ${basisLabel} · ${lookLabel} · high − low, in points`;
+  document.getElementById('dir-table').innerHTML=
+    `<thead><tr><th>wd</th><th>n</th><th>G</th><th>R</th><th>rate</th><th>95% CI</th><th>edge</th></tr></thead><tbody>`+
+    st.rows.map(x=>`<tr class="${x.wd===todayWd?'hi':''} ${x.straddles?'dim':''}"><td>${x.short}</td>
+      <td>${x.n}</td><td>${x.k}</td><td>${x.red}</td><td>${pc(x.p)}</td>
+      <td>${pc(x.lo)}–${pc(x.hi)}</td>
+      <td>${x.edge==null?'—':(x.edge>=0?'+':'')+(x.edge*100).toFixed(1)}</td></tr>`).join('')+'</tbody>';
 
-  document.getElementById('rng-table').innerHTML = `
-    <thead><tr><th>Weekday</th><th>n</th><th>p10</th><th>p25</th><th>Median</th>
-      <th>p75</th><th>p90</th><th>Mean</th><th>Median $</th></tr></thead><tbody>` +
-    stats.rows.map(r=>`<tr class="${r.wd===todayWd?'today':''}">
-      <td>${r.wd}</td><td class="n">${r.n}</td><td class="n">${num(r.p10,1)}</td>
-      <td class="n">${num(r.p25,1)}</td><td class="n"><b>${num(r.p50,1)}</b></td>
-      <td class="n">${num(r.p75,1)}</td><td class="n">${num(r.p90,1)}</td>
-      <td class="n">${num(r.mean,1)}</td><td class="n">${usd(r.p50*pv)}</td></tr>`).join('')
-    + '</tbody>';
+  document.getElementById('rng-table').innerHTML=
+    `<thead><tr><th>wd</th><th>#</th><th>n</th><th>p10</th><th>p25</th><th>med</th><th>p75</th><th>p90</th><th>mean</th><th>med $</th></tr></thead><tbody>`+
+    st.rows.map(x=>`<tr class="${x.wd===todayWd?'hi':''}"><td>${x.short}</td><td>${x.rank||'—'}</td>
+      <td>${x.n}</td><td>${n2(x.p10,1)}</td><td>${n2(x.p25,1)}</td><td><b>${n2(x.p50,1)}</b></td>
+      <td>${n2(x.p75,1)}</td><td>${n2(x.p90,1)}</td><td>${n2(x.mean,1)}</td>
+      <td>${$(x.p50*pv)}</td></tr>`).join('')+'</tbody>';
 
-  drawDirection(stats, todayWd);
-  drawRange(stats, todayWd);
+  const anyEdge=st.rows.some(x=>!x.straddles&&x.n>0);
+  document.getElementById('dir-note').innerHTML=anyEdge?'':
+    `<div class="note"><b>No weekday clears its own interval.</b> Across ${st.baseN} sessions every
+     95% interval spans 50%, so on this evidence the weekday does not predict direction. The range
+     panel is a different story.</div>`;
 
-  /* session picker */
-  const pick=document.getElementById('daypick');
-  const keep=pick.value;
-  pick.innerHTML = sessions.slice(-120).reverse()
-    .map(s=>`<option value="${s.date}">${s.date} · ${s.wd.slice(0,3)}</option>`).join('');
-  if(keep && sessions.some(s=>s.date===keep)) pick.value=keep;
+  drawDirection(st,todayWd); drawRange(st,todayWd);
+
+  const pick=document.getElementById('daypick'), keep=pick.value;
+  pick.innerHTML=sessions.slice(-160).reverse()
+    .map(s=>`<option value="${s.date}">${s.date} ${s.wd.slice(0,3)}</option>`).join('');
+  if(keep&&sessions.some(s=>s.date===keep)) pick.value=keep;
   drawDay();
 }
 
 function drawDay(){
-  const date=document.getElementById('daypick').value;
-  const sess=S.sessions.find(s=>s.date===date);
+  const sess=S.sessions.find(s=>s.date===document.getElementById('daypick').value);
   if(!sess) return;
   const pv=S.manifest?.pointValue||1;
-  document.getElementById('day-title').textContent =
-    `${F.nice.format(new Date(sess.bars[0].t))}`;
-  document.getElementById('day-cap').textContent =
-    `O ${sess.o}  H ${sess.h}  L ${sess.l}  C ${sess.c}  ·  range ${num(sess.range)} pts (${usd(sess.range*pv)})  ·  ${sess.green?'GREEN':'RED'}  ·  ${sess.bars.length} bars`;
+  document.getElementById('day-title').textContent=F.nice.format(new Date(sess.bars[0].t-180000));
+  document.getElementById('day-sub').textContent=`${sess.bars.length} bars · ZigZag K=3`;
+  document.getElementById('day-read').innerHTML=`
+    <div><dt>open</dt><div class="v sm">${sess.o}</div></div>
+    <div><dt>high</dt><div class="v sm up">${sess.h}</div></div>
+    <div><dt>low</dt><div class="v sm dn">${sess.l}</div></div>
+    <div><dt>close</dt><div class="v sm">${sess.c}</div></div>
+    <div><dt>range</dt><div class="v sm am">${n2(sess.range)}</div><div class="s">${$(sess.range*pv)}</div></div>
+    <div><dt>result</dt><div class="v sm ${sess.green?'up':'dn'}">${sess.green?'GREEN':'RED'}</div></div>`;
+
   const piv=drawSession(sess);
-  const waves=waveTable(sess.bars,piv).filter(w=>w.available);
-  const big=biggestWaveIn(waves);
-  document.getElementById('wave-table').innerHTML = `
-    <thead><tr><th>#</th><th>Start</th><th>End</th><th>Dir</th><th>Points</th><th>$</th>
-      <th>Bars</th><th>Mins</th><th>Wave vol</th><th>Peak-bar vol</th></tr></thead><tbody>`+
-    waves.map(w=>`<tr class="${big.available&&w.waveIndex===big.waveIndex?'today':''}">
-      <td class="n">${w.waveIndex}</td>
-      <td class="n">${F.hm.format(new Date(w.startTime))}</td>
-      <td class="n">${F.hm.format(new Date(w.endTime))}</td>
-      <td class="n" style="color:${w.direction==='up'?'var(--bull)':'var(--bear)'}">${w.waveType}</td>
-      <td class="n">${num(w.priceChange)}</td>
-      <td class="n">${usd(w.priceChange*pv)}</td>
-      <td class="n">${w.barCount}</td>
-      <td class="n">${Math.round(w.durationMs/60000)}</td>
-      <td class="n">${w.waveVolumeTotal.toLocaleString()}</td>
-      <td class="n">${(w.waveVolumePeakBar??0).toLocaleString()}</td></tr>`).join('')
-    + '</tbody>';
+  const w=waveTable(sess.bars,piv).filter(x=>x.available), big=biggestWaveIn(w);
+  document.getElementById('wave-sub').textContent =
+    `${w.length} waves · biggest ${big.available?n2(big.priceChange)+' pts':'—'}`;
+  document.getElementById('wave-table').innerHTML=
+    `<thead><tr><th>#</th><th>start</th><th>end</th><th>dir</th><th>pts</th><th>$</th>
+      <th>bars</th><th>min</th><th>wave vol</th><th>peak bar</th></tr></thead><tbody>`+
+    w.map(x=>`<tr class="${big.available&&x.waveIndex===big.waveIndex?'hi':''}">
+      <td>${x.waveIndex}</td><td>${F.hm.format(new Date(x.startTime))}</td>
+      <td>${F.hm.format(new Date(x.endTime))}</td>
+      <td class="${x.direction==='up'?'up':'dn'}">${x.direction==='up'?'rally':'decline'}</td>
+      <td>${n2(x.priceChange)}</td><td>${$(x.priceChange*pv)}</td>
+      <td>${x.barCount}</td><td>${Math.round(x.durationMs/60000)}</td>
+      <td>${k(x.waveVolumeTotal)}</td><td>${k(x.waveVolumePeakBar)}</td></tr>`).join('')+'</tbody>';
 }
 
-/* ── boot ───────────────────────────────────────────────────────────────────── */
+/* ── boot ──────────────────────────────────────────────────────────────── */
 function showStatus(){
-  const m=S.manifest, n=S.bars.length;
-  const first=F.nice.format(new Date(S.bars[0].t)), last=F.nice.format(new Date(S.bars.at(-1).t));
-  // find the largest hole, so a gap can never masquerade as continuous history
-  let gap=0, gapAt=null;
-  for(let i=1;i<S.bars.length;i++){
-    const d=S.bars[i].t-S.bars[i-1].t;
-    if(d>gap){gap=d; gapAt=S.bars[i-1].t;}
-  }
-  const gapDays=gap/86400000;
-  document.getElementById('status').innerHTML =
-    `<span>symbol <b>${m.symbol}</b> (${m.ticker})</span>`
-   +`<span>interval <b>${m.interval}</b></span>`
-   +`<span>bars <b>${n.toLocaleString()}</b></span>`
-   +`<span><b>${first}</b> → <b>${last}</b></span>`
-   +`<span>tz <b>${m.tz}</b></span>`
-   +(gapDays>2?`<span class="warn">largest gap <b>${gapDays.toFixed(0)} days</b> from ${F.nice.format(new Date(gapAt))}</span>`:'');
+  const m=S.manifest,n=S.bars.length;
+  let gap=0,at=null;
+  for(let i=1;i<S.bars.length;i++){const d=S.bars[i].t-S.bars[i-1].t; if(d>gap){gap=d;at=S.bars[i-1].t;}}
+  const gd=gap/86400000;
+  document.getElementById('status').innerHTML=
+    `<span><b>${m.symbol}</b> ${m.ticker}</span><span>${m.interval}</span>`
+   +`<span><b>${n.toLocaleString()}</b> bars</span>`
+   +`<span>${F.nice.format(new Date(S.bars[0].t))} → <b>${F.nice.format(new Date(S.bars.at(-1).t))}</b></span>`
+   +`<span>${m.tz}</span>`
+   +(gd>2?`<span class="warn">gap <b>${gd.toFixed(0)}d</b> @ ${F.nice.format(new Date(at))}</span>`:'');
 }
-
 async function boot(){
   try{
     initFmt();
     const {bars,manifest}=await loadRemote('ES');
     S.bars=bars; S.manifest=manifest;
-    showStatus(); document.getElementById('app').classList.remove('hidden');
-    render();
+    showStatus(); document.getElementById('app').classList.remove('hidden'); render();
   }catch(e){
-    document.getElementById('err').innerHTML =
-      `<div class="note bad"><b>Could not load the data store.</b> ${e.message}<br>
-       Opened from a <code>file://</code> path? Browsers block module and fetch requests there —
-       serve it locally instead:<br><code>python -m http.server</code> from the repo root, then open
+    document.getElementById('err').innerHTML=
+      `<div class="note"><b>Could not load the data store.</b> ${e.message}<br>
+       Opened from a <code>file://</code> path? Modules and fetch are blocked there — serve it:
+       <code>python -m http.server</code> from the repo root, then open
        <code>http://localhost:8000/current/</code>.</div>`;
   }
 }
-
-document.getElementById('b-rth').onclick=()=>{
-  S.basis='rth';
-  document.getElementById('b-rth').setAttribute('aria-pressed','true');
-  document.getElementById('b-daily').setAttribute('aria-pressed','false'); render();};
-document.getElementById('b-daily').onclick=()=>{
-  S.basis='daily';
-  document.getElementById('b-daily').setAttribute('aria-pressed','true');
-  document.getElementById('b-rth').setAttribute('aria-pressed','false'); render();};
+const press=(on,off)=>{document.getElementById(on).setAttribute('aria-pressed','true');
+  document.getElementById(off).setAttribute('aria-pressed','false');};
+document.getElementById('b-rth').onclick  =()=>{S.basis='rth';  press('b-rth','b-daily'); render();};
+document.getElementById('b-daily').onclick=()=>{S.basis='daily';press('b-daily','b-rth'); render();};
 document.getElementById('look').onchange=e=>{S.look=+e.target.value; render();};
 document.getElementById('daypick').onchange=drawDay;
-document.getElementById('loadlocal').onclick=()=>document.getElementById('fileinput').click();
-addEventListener('resize',()=>{ if(S.sessions.length) render(); });
-
+let rt; addEventListener('resize',()=>{clearTimeout(rt);rt=setTimeout(()=>{if(S.sessions.length)render();},150);});
 boot();
 </script>
 </body>
